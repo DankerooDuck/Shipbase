@@ -1,0 +1,55 @@
+﻿@using GundamEvolutionDatabase.Models.ViewModels
+@model GundamEvolutionDatabase.Models.Unit
+
+<div class="row">
+    <div class="col-5" style="padding-bottom: 10px;">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="@Model.ImageURL" alt="@Model.Name">
+            <div class="star-rating" data-rating="@Model.Difficulty"></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">@Model.Name</h5>
+                        <h10 class="card-text">@Model.Tag</h10>
+                    </div>
+                </div>
+                <hr>
+                <p class="card-text">@Model.Description</p>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: auto;">
+            <div class="card-body">
+                <p>Range: @Model.Range</p>
+                <p>Health: @Model.Health</p>
+                <p>Dash Limit: @Model.DashLimit</p>
+                @if (@Model.Shield != null)
+                {
+                    <p>Shield: @Model.Shield</p>
+                }
+                @if (Model.Abilities != null)
+                {
+                    <hr />
+                    @foreach (var a in Model.Abilities)
+                    {
+                        <p>@a.AbilityName</p>
+                    }
+                }
+                @if (Model.Weapons != null)
+                {
+                    <hr />
+                    @foreach (var w in Model.Weapons)
+                    {
+                        <p>@w.WeaponName</p>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        

@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gundam Evolution Database</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GundamEvolutionDatabase.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col">
+                <div class="container navbar">
+                    <nav class="navbar navbar-expand-lg rounded">
+                        <a class="navbar-brand text-white" href="/">Gundam Evolution Database</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="col">
+                <div class="container navbar">
+                    <nav class="navbar navbar-expand-lg rounded">
+                        <div class="collapse navbar-collapse" id="navbarsExample09">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" href="/Unit/List">Units</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - GundamEvolutionDatabase - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

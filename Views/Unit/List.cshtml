@@ -1,0 +1,66 @@
+﻿@using GundamEvolutionDatabase.Models.ViewModels
+@model GundamEvolutionDatabase.Models.ViewModels.UnitListViewModel
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gundam Evolution Database</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+
+</style>
+
+<div class="row" >
+    @foreach (var u in Model.Units)
+    {
+        <div class="col" style="padding-bottom: 10px;">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@u.ImageURL" alt="@u.Name">
+                <div class="star-rating" data-rating="@u.Difficulty"></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title">@u.Name</h5>
+                            <h10 class="card-text">@u.Tag</h10>
+                        </div>
+                        <div class="col-4 align-self-center">
+                            @Html.ActionLink("Details", "Details", "Unit", new { id = u.UnitID }, new { @class = "btn btn-primary details-link", data_id = u.UnitID, data_name = u.Name })
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="card-text">@u.Description</p>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div id="unit-details-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="unit-details-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unit-details-modal-label">Unit Details - unitName</h5>
+            </div>
+            <div class="modal-body">
+                <div id="unit-details-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.details-link').click(function (e) {
+            e.preventDefault();
+            var url = '@Url.Action("Details", "Unit")';
+            var unitId = $(this).data('id');
+            var unitName = $(this).data('name')
+            $.get(url, { id: unitId }, function (data) {
+                $('#unit-details-container').html(data);
+                $('#unit-details-modal .modal-title').text("Unit Details - " + unitName);
+                $('#unit-details-modal').modal('show');
+            });
+        });
+    });
+</script>
