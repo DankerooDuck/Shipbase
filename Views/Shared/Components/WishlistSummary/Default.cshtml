@@ -1,0 +1,13 @@
+﻿@model Wishlist
+
+<div class="wishlist-container">
+    <a class="btn btn-sm btn-dark"
+       asp-controller="Wishlist" asp-action="Index"
+       asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
+        <i class="fa fa-heart"></i>
+    </a>
+    <small class="navbar-text text-white">
+        <b>Wishlist:</b>
+        @Model.Lines.Sum(x => x.Quantity) item(s)
+    </small>
+</div>

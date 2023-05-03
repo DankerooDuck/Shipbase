@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewBag.Title = "Orders";
+    Layout = "_AdminLayout";
+}
+@*@if (Model.Count() > 0)
+{*@   <div class="row">
+        <div class="col">
+            <h4>Incomplete Orders</h4>
+        </div>
+        <div class="col d-flex justify-content-end align-items-top">
+            @*MANUAL CHECK BY ORDERID BUTTON*@
+            <form asp-controller="Order" asp-action="Check" method="get">
+                <input type="number" name="orderId" value="@Model" />
+                <button type="submit">Check Order</button>
+            </form>
+        </div>
+    </div>
+    @*UNPROCESSED ORDERS*@
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Order ID</th>
+            <th>Name</th>
+            <th>Zip</th>
+            <th colspan="2" class="text-center">Details</th>
+            <th>Actions</th>
+        </tr>
+
+    @foreach (Order o in Model.Where(o => !o.Shipped))
+        {
+            <tr>
+                <td>@o.OrderID</td>
+                <td>@o.Name</td>
+                <td>@o.Zip</td>
+                <th>Product</th>
+                <th>Quantity</th>
+                <td class="text-center">
+                    <a asp-action="Check" class="btn btn-sm btn-warning" asp-route-orderId="@o.OrderID">Details</a>
+                    <form asp-action="MarkShipped" method="post" style="display:inline;">
+                        <input type="hidden" name="orderId" value="@o.OrderID" />
+                        <button type="submit" class="btn btn-danger btn-sm">Ship</button>
+                    </form>
+                </td>
+            </tr>
+            @foreach (CartLine line in o.Lines)
+            {
+                <tr>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td>@line.Product.Name</td>
+                    <td>@line.Quantity</td>
+                    <td></td>
+                </tr>
+            }
+        }
+    </table>
+<div class="col">
+    <h4>Completed Orders</h4>
+</div>
+@* PROCESSED ORDERS *@
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Order ID</th>
+            <th>Name</th>
+            <th>Zip</th>
+            <th colspan="2" class="text-center">Details</th>
+            <th>Actions</th>
+        </tr>
+
+    @foreach (Order o in Model.Where(o => o.Shipped == true))
+    {
+                <tr>
+                    <td>@o.OrderID</td>
+                    <td>@o.Name</td>
+                    <td>@o.Zip</td>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <td class="text-center">
+                        <a asp-action="Check" class="btn btn-sm btn-warning" asp-route-orderId="@o.OrderID">Details</a>
+                    </td>
+                </tr>
+        @foreach (CartLine line in o.Lines)
+        {
+                        <tr>
+                            <td></td>
+                            <td colspan="2"></td>
+                            <td>@line.Product.Name</td>
+                            <td>@line.Quantity</td>
+                            <td></td>
+                        </tr>
+        }
+    }
+    </table>
+@*}
+else
+{
+    <div class="text-center">No Orders</div>
+}*@

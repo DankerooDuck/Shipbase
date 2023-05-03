@@ -1,0 +1,14 @@
+﻿@{
+    var order = ViewBag.Order as Order;
+}
+
+<div class="card">
+    <div class="card-header">
+        Order Completed! 
+    </div>
+    <div class="card-body">
+        <p>Thank you for placing an order!</p>
+        <p>Your order number is: @order.OrderID</p>
+        <p>We'll ship your goods as soon as possible.</p>
+    </div>
+</div>

@@ -1,5 +1,7 @@
-html {
-  font-size: 14px;
+﻿html {
+    font-size: 14px;
+    margin-bottom: 60px;
+    
 }
 
 @media (min-width: 768px) {
@@ -8,93 +10,15 @@ html {
   }
 }
 
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-    margin-bottom: 60px;
-    background-color: #181A1B;
-    color: white;
-}
-
-main {
-    background-color: #181A1B;
-    border-radius: 0.3rem;
-    color: white;
-}
-
-.navbar {
-    position: relative;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    padding: 0.5rem 1rem;
-}
-
-.navbar-expand-lg {
-    -webkit-box-direction: normal;
-    background-color: #2C2F31;
-    color: white;
-}
-
-.ul {
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 40px;
-}
-
-.card {
-    background-color: #2C2F31;
-    color: white;
-}
-
-.card-title {
-    white-space: nowrap;
-}
-
-.star-rating {
-    position: absolute;
-    top: 10px;
-    right: 5px;
-    display: inline-block;
-    height: 15px;
-    width: 100px;
-    font-size: 0;
-    line-height: 1;
-    box-shadow: 0px 0px 10px black;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 2rem;
-}
-.star-rating::before {
-  content: "\2605\2605\2605\2605";
-  font-size: 30px;
-  position: absolute;
-  color: #ddd;
-  margin-top: -10px;
-}
-.star-rating[data-rating="1"]::before {
-  content: "\2605\2606\2606\2606";
-  color: #ffcc00;
-}
-.star-rating[data-rating="2"]::before {
-  content: "\2605\2605\2606\2606";
-  color: #ffcc00;
-}
-.star-rating[data-rating="3"]::before {
-  content: "\2605\2605\2605\2606";
-  color: #ffcc00;
-}
-.star-rating[data-rating="4"]::before {
-  content: "\2605\2605\2605\2605";
-  color: #ffcc00;
-}
-
-.modal-content {
-    background-color: #333333;
-    color: #white;
-    font-family: Arial, sans-serif;
+    margin-bottom: 100px;
 }

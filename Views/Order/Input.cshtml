@@ -1,0 +1,9 @@
+﻿@model int?
+
+<form asp-controller="Order" asp-action="Check" method="get">
+    <div class="form-group">
+        <label for="orderId">Order ID:</label>
+        <input type="number" class="form-control" id="orderId" name="orderId" value="@Model" />
+    </div>
+    <button type="submit" class="btn btn-primary">Check Order</button>
+</form>

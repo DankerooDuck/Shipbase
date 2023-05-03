@@ -1,0 +1,189 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="container" style="padding-top: 8px;">
+    <div class="row">
+        @*IMAGE COLUMN*@
+        <div class="col-auto" style="backdrop-filter:drop-shadow()">
+            <img src="@Model.ImageURL" alt="@Model.Name" class="img-fluid" style="max-width: 25vw;">
+        </div>
+        @*DETAILS COLUMN*@
+        <div class="col col-mb-2 align-content-end">
+            @*ITEM NAME ROW*@
+            <div class="row">
+                <h2 class="mb-3">@Model.Name</h2>
+            </div>
+            @*CATEGORY + BRAND ROW*@
+            <div class="row justify-content-start">
+                <div class="col-auto">
+                    <span class="badge bg-primary">@Model.Category</span>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-secondary">@Model.Brand</span>
+                </div>
+            </div>
+            <hr class="my-4"> @*LINE BREAK*@
+            @*PRICE*@
+            <div class="row">
+                <h3 class="mb-3">@Model.Price.ToString("c")</h3>
+                <p><strong>Free shipping on orders over $50!</strong></p>
+            </div>
+            @*ADD TO CART / WISHLIST*@
+            <div class="row justify-content-evenly">
+                <div class="col-auto">
+                    <form method="post" asp-action="AddToCart" asp-controller="Cart">
+                        <input type="hidden" asp-for="ProductID" />
+                        <button type="submit" class="btn btn-lg btn-warning me-3">
+                            <i class="bi bi-basket-fill me-1"></i>Add to Cart
+                        </button>
+                    </form>
+
+                </div>
+                <div class="col-auto">
+                    <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                        <input type="hidden" name="productId" value="@Model.ProductID" />
+                        <button type="submit" class="btn btn-lg btn-outline-secondary">
+                            <i class="bi bi-heart-fill me-1"></i>Add to Wishlist
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <hr class="my-4"> @*LINE BREAK*@
+            <div class="row">
+                <div class="col">
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+            <hr class="my-4"> @*LINE BREAK*@
+            <div class="row">
+                <ul class="list-group">
+                    <li class="group-list-item"><strong>Brand:</strong> @Model.Brand</li>
+                    <li class="group-list-item"><strong>@Model.AttributeName:</strong> @Model.AttributeNameValue</li>
+                    <li class="group-list-item"><strong>Weight:</strong> @Model.Weight lbs</li>
+                    <li class="group-list-item"><strong>Length:</strong> @Model.Length in</li>
+                    <li class="group-list-item"><strong>Width:</strong> @Model.Width in</li>
+                    <li class="group-list-item"><strong>Height:</strong> @Model.Height in</li>
+                    <li class="group-list-item"><strong>Stock:</strong> @Model.Amount remaining</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4"> @*LINE BREAK*@
+    <div class="row">
+        <h3>Reviews</h3>
+        @if (Model.Reviews == null || Model.Reviews.Count() == 0) // IF NO REVIEWS ON ITEM
+        {
+            <p>Be the first one to leave a review!</p>
+        }
+        else // ITEM HAS REVIEWS
+        {
+            <div class="row">
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class=row>
+                                    <div class="col">
+                                        <h5 class="card-title">@review.Title</h5>
+                                    </div>
+                                    <div class="col ml-auto">
+                                        <p class="card-text"><strong>Rating:</strong> @review.Rating</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">@review.Comment</p>
+                            </div>
+                            <div class="card-footer">
+                                <p class="card-text">
+                                <small class="text-muted">Posted on @review.PostedDate.ToString("D") @*by @review.User.UserName*@</small>
+                                </p>
+                            </div>
+                         </div>
+                    </div>   
+                }
+            </div>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="text-right">
+                <a asp-action="Create" asp-controller="Review" asp-route-productId="@ViewData["ProductId"]" class="btn btn-primary">write a review</a>
+            </div>
+        }
+        else
+        {
+            <p>Please <a asp-controller="Account" asp-action="Login">log in</a> to write a review.</p>
+    }
+        
+</div>
+
+@*
+<div class="container">
+    <div class="row-auto">
+        <div class="col-md-6">
+            <img src="@Model.ImageURL" alt="@Model.Name" class="img-fluid">
+        </div>
+        <div class="col-md-9">
+            <h2 class="mb-3">@Model.Name</h2>
+            <div class="mb-3">
+                <span class="badge bg-primary">@Model.Category</span>
+                <span class="badge bg-secondary">@Model.Brand</span>
+            </div>
+            <h3 class="mb-3">@Model.Price.ToString("c")</h3>
+            <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                <input type="hidden" name="productId" value="@Model.ProductID" />
+                <button type="submit" class="btn btn-lg btn-warning me-3">
+                    <i class="bi bi-basket-fill me-2"></i>Add to Cart
+                </button>
+            </form>
+            <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                <input type="hidden" name="productId" value="@Model.ProductID" />
+                <button type="submit" class="btn btn-lg btn-outline-secondary">
+                    <i class="bi bi-heart-fill me-2"></i>Add to Wishlist
+                </button>
+            </form>
+            <hr class="my-4">
+            <p class="lead mb-1">Product description:</p>
+            <p class="mb-5">@Model.Description</p>
+            <p class="lead mb-1">Product details:</p>
+            <ul class="list-unstyled small">
+                <li><strong>@Model.AttributeName:</strong> @Model.AttributeNameValue</li>
+                <li><strong>Item Dimensions:</strong>
+                    <ul class="list-unstyled small">
+                        <li><strong>Length:</strong> @Model.Length in</li>
+                        <li><strong>Width:</strong> @Model.Width in</li>
+                        <li><strong>height:</strong> @Model.Height in</li>
+                    </ul>
+                </li>
+                <li><strong>Item Dimensions:</strong> Insert Model Dimensions</li>
+                <li><strong>Item Weight:</strong> @Model.Weight lbs</li>
+            </ul>
+        </div>
+    </div>
+</div>
+*@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add to Wishlist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to add this item to your wishlist?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                    <input type="hidden" name="productId" value="@Model.ProductID" />
+                    <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

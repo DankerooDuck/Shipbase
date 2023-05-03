@@ -1,0 +1,17 @@
+﻿@model Cart
+
+<div id="wishlist-container">
+    @if (Model.Lines.Count() >= 0)
+    {
+        <a class="btn btn-sm btn-dark"
+            asp-controller="Cart" asp-action="Index"
+            asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            <i class="fa fa-shopping-cart"></i>
+        </a>
+        <small class="navbar-text text-white">
+            <b>Cart:</b>
+            @Model.Lines.Sum(x => x.Quantity) item(s)
+            @Model.ComputeTotalValue().ToString("c")
+        </small>
+    }
+</div>

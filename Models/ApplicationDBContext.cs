@@ -1,27 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace GundamEvolutionDatabase.Models
+namespace ShipBase.Models
 {
-    public class ApplicationDBContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     {
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) 
-            : base(options)
-        {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        }
+        public DbSet<Product> Products { get; set; }
 
-        public DbSet<Unit>? Units { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
-        public DbSet<Ability>? Abilities { get; set; }
-
-        public DbSet<Weapon>? Weapons { get; set; }
-
-        public DbSet<Map>? Maps { get; set; }
-
-        public DbSet<Season>? Seasons { get; set; }
-
-        public DbSet<GameMode>? GameModes { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }

@@ -1,0 +1,68 @@
+﻿@model WishlistIndexViewModel
+
+<div class="row ms-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2>My Wishlist</h2>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Quantity</th>
+                <th>Item</th>
+                <th class="text-right">Price</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var line in Model.Wishlist.Lines)
+            {
+                    <tr>
+                        <td class="text-center">@line.Quantity</td>
+                        <td class="text-left">@line.Product.Name</td>
+                        <td class="text-right">@line.Product.Price.ToString("c")</td>
+                        <td class="text-right">
+                        @((line.Quantity * line.Product.Price).ToString("c"))
+                        </td>
+                        <td>
+                            <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                                <input type="hidden" name="productId" value="@line.Product.ProductID" />
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    Add to Cart
+                                </button>
+                            </form>
+                            <form asp-action="RemoveFromWishlist" method="post">
+                                <input type="hidden" name="ProductID" value="@line.Product.ProductID" />
+                                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                                <button type="submit" class="btn btn-sm btn-danger mt-2">
+                                    Remove
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right">Total:</td>
+                <td class="text-right">
+                    @Model.Wishlist.ComputeTotalValue().ToString("c")
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="text-center">
+    <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
+    <a href="#" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('addAllToCartForm').submit();">
+        Add All to Cart
+    </a>
+    <form id="addAllToCartForm" asp-action="AddAllToCart" asp-controller="Cart" method="post" style="display: none;">
+        @foreach (var line in Model.Wishlist.Lines)
+        {
+            <input type="hidden" name="productId" value="@line.Product.ProductID" />
+            <input type="hidden" name="quantity" value="@line.Quantity" />
+        }
+    </form>
+</div>

@@ -1,53 +1,97 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Gundam Evolution Database</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/GundamEvolutionDatabase.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.min.css" />
+    <link rel="stylesheet" asp-href-include="lib/font-awesome/css/*.css" />
+    <title>Shipbase</title>
+
+    <style type="text/css">
+        .footer {
+            position: fixed;
+            text-align: center;
+            bottom: 0px;
+            width: 100%;
+        }
+    </style>
+
 </head>
+
 <body>
-    <div class="container">
-        <div class="row justify-content-between">
-            <div class="col">
-                <div class="container navbar">
-                    <nav class="navbar navbar-expand-lg rounded">
-                        <a class="navbar-brand text-white" href="/">Gundam Evolution Database</a>
-                    </nav>
-                </div>
+    <nav class="navbar navbar-inverse navbar-dark bg-primary text-white justify-content-between">
+        <a class="navbar-brand text-white" href="/">
+            <img src="/images/shipbase.png" alt="Shipbase" style="width: 150px; height: auto;"/>
+        </a>
+        @if (!User.Identity.IsAuthenticated) //USER NOT LOGGED IN
+        {
+            //CREATE ACCOUNT OR LOGIN
+            <div class="mx-auto text-center">
+                <a class="nav-link text-white" href="/Account/Create">Create Account</a>
+                <a class="nav-link text-white" href="/Account/Login">Login</a>
             </div>
-            <div class="col">
-                <div class="container navbar">
-                    <nav class="navbar navbar-expand-lg rounded">
-                        <div class="collapse navbar-collapse" id="navbarsExample09">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link text-white" href="/Unit/List">Units</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+        }
+        else //USER LOGGED IN
+        {
+            //HELLO USER & LOGOUT
+            <div class="mx-auto text-center">
+                <a class="nav-link text-white" href="">Hello, @User.Identity.Name</a>
+                <a href="@Url.Action("Logout", "Account")" class="nav-link text-white" style="background-color: transparent; border: none;">Logout</a>
+            </div>
+            @if (User.IsInRole("Admin")) //IF USER IS ADMIN
+            {
+                <a class="nav-link text-white" href="@Url.Action("Index", "Admin")">Admin Panel</a>
+            }
+            else //USER IS CUSTOMER
+            {
+                //CHECK ORDER
+                <div class="mx-auto text-center text-white">
+                    <form action="@Url.Action("Input", "Order")" method="post">
+                         <button type="submit" class="nav-link text-white" style="background-color: transparent; border: none; height: auto;">Check Order</button>
+                    </form>
+                </div> 
+            }     
+        }
+        @*SEARCH BAR*@
+        <div class="mx-auto text-center text-white">
+            <form method="get" asp-controller="Product" asp-action="Search">
+                <div class="input-group" ,class="mx-auto text-center">
+                    <input type="text" class="form-control" placeholder="Search products..." name="searchQuery">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-light text-white" type="submit">Search</button>
+                    </div>
                 </div>
+            </form>
+        </div>
+        <div class="float-right" style="padding-right: 30px;">
+            @await Component.InvokeAsync("CartSummary")
+        </div>
+        <div class="float-right" style="padding-right: 30px;">
+            @await Component.InvokeAsync("WishlistSummary")
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-lg-1">
+                @await Component.InvokeAsync("NavigationMenu")
+            </div>
+            <div class="col-12 col-lg-10">
+                @RenderBody()
             </div>
         </div>
     </div>
-    <div class="container">
-        <main role="main">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - GundamEvolutionDatabase - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    @*FOOTER*@
+    <div class="footer mt-auto py-0 bg-dark">
+        <div class="container text-center">
+            <a href="/About/Background">Business Background</a>
+            <a href="/About/Contact">Contact Us</a>
+            <a href="/About/Team">Our Team</a>
+            <a href="/About/Details">Business Details </a>
+            <a href="/About/TOS">Terms of Service </a>
+            <a asp-controller="About" asp-action="FAQ"> FAQ </a>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </div>
 </body>
-
 </html>
+

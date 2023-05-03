@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using GundamEvolutionDatabase.Models;
-using GundamEvolutionDatabase.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ShipBase.Models.ViewModels;
+using ShipBase.Models;
 
-namespace GundamEvolutionDatabase.Controllers
+
+namespace ShipBase.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
         private UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
-        public AccountController(UserManager<AppUser> usrMgr, SignInManager<AppUser> signInMgr)
+        public AccountController(UserManager<AppUser> userMgr,
+        SignInManager<AppUser> signInMgr)
         {
-            userManager = usrMgr;
+            userManager = userMgr;
             signInManager = signInMgr;
         }
 
-        // LOGIN
         [AllowAnonymous]
         public ViewResult Login(string? returnUrl)
         {
@@ -33,52 +34,62 @@ namespace GundamEvolutionDatabase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                AppUser user = await userManager.FindByNameAsync(loginModel.UName);
-                if ((await signInManager.PasswordSignInAsync(user,
-                    loginModel.Password, false, false)).Succeeded)
+                AppUser user = await userManager.FindByNameAsync(loginModel.UserName);
+                if (user != null)
                 {
-                    return Redirect(loginModel?.ReturnUrl ?? "/");
+                    await signInManager.SignOutAsync();
+                    if ((await signInManager.PasswordSignInAsync(user,
+                    loginModel.Password, false, false)).Succeeded)
+                    {
+                        return Redirect(loginModel?.ReturnUrl ?? "/");
+                    }
                 }
             }
-            ModelState.AddModelError("", "Invalid name or password.");
+            ModelState.AddModelError("", "Invalid name or password");
             return View(loginModel);
         }
-
-        // LOGOUT
         public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();
-            return Redirect(returnUrl);
+            
+        return Redirect(returnUrl);
         }
-
-        // CREATE
+        
+        [Authorize(Roles = "Admin")]
+        public ViewResult Index()
+        {
+            return View(userManager.Users);
+        }
         [AllowAnonymous]
         public ViewResult Create()
         {
             return View();
         }
-
+        //POST: Account/Create
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateModel createModel)
+        public async Task<IActionResult> Create(LoginModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 AppUser user = new AppUser
                 {
-                    UName = createModel.UName,
-                    Email = createModel.Email,
-                    FName = createModel.FName,
-                    LName = createModel.LName,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
                 };
-                IdentityResult result = await userManager.CreateAsync(user, createModel.Password);
+                IdentityResult result = await userManager.CreateAsync(user,
+                model.Password);
                 if (result.Succeeded)
                 {
+                    
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home", new { returnUrl = createModel?.ReturnUrl });
+                    return RedirectToAction("Index", "Home", new { returnUrl = model?.ReturnUrl });
                 }
                 else
                 {
@@ -88,24 +99,20 @@ namespace GundamEvolutionDatabase.Controllers
                     }
                 }
             }
-            return View(createModel);
+            return View(model);
         }
-
-        // ERRORS
-        public void AddErrors(IdentityResult result)
+        private void AddErrors(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)
             {
                 ModelState.TryAddModelError("", error.Description);
             }
         }
-
-        // DELETE
         public async Task<IActionResult> Delete(string id)
         {
             AppUser user = await userManager.FindByIdAsync(id);
-
-            if (user != null)
+            
+        if (user != null)
             {
                 IdentityResult result = await userManager.DeleteAsync(user);
                 if (result.Succeeded)
@@ -123,8 +130,6 @@ namespace GundamEvolutionDatabase.Controllers
             }
             return View("Index", userManager.Users);
         }
-
-        // EDIT
         public async Task<IActionResult> Edit(string id)
         {
             AppUser user = await userManager.FindByIdAsync(id);
@@ -138,7 +143,9 @@ namespace GundamEvolutionDatabase.Controllers
             }
         }
 
+        
+        
+       
 
-    } // end class
-} // end namespace
-
+        }
+    }

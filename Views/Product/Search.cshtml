@@ -1,0 +1,73 @@
+﻿@model ProductsListViewModel
+
+<div class="row row-cols-1 row-cols-md-3">
+    @foreach (var p in Model.Products)
+    {
+        <div class="col mb-4" style="padding-top: 8px;"> @*width and margin*@
+            <div class="card h-100"> @*Makes sure all cards have same hight*@
+                <div class="card-header">
+                    <img src="@p.ImageURL" class="card-img-top" alt="@p.Name">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@p.Name</h5>
+                    <p class="card-text">@p.Description</p>
+                    <p class="card-text">Price: @p.Price.ToString("c")</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row row-cols-3 justify-content-between">
+                        <div class="col-auto">
+                            <div class="btn-block">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.ProductID" class="btn btn-secondary">Details</a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-block">
+                                <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                                    <input type="hidden" name="productId" value="@p.ProductID" />
+                                    <input type="submit" value="Add to Cart" class="btn btn-warning" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-block">
+                                <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                                    <input type="hidden" name="productId" value="@p.ProductID" />
+                                    <button type="submit" value="Add to Wishlist" class="btn btn-primary">
+                                        Add to Wishlist
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+    @*
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@p.Name</h5>
+            <p class="card-text">@p.Description</p>
+            <p class="card-text">Price: @p.Price.ToString("c")</p>
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@p.ProductID" class="btn btn-secondary">Details</a>
+            <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                <input type="hidden" name="productId" value="@p.ProductID" />
+                <input type="submit" value="Add to Cart" class="btn btn-primary" />
+            </form>
+            <form asp-action="AddToWishlist" asp-controller="Wishlist" method="post">
+                <input type="hidden" name="productId" value="@p.ProductID" />
+                <button type="submit" class="btn btn-sm btn-warning">
+                    Add to Wishlist
+                </button>
+            </form>
+        </div>
+    </div>
+    *@
+
+
+<div page-model="@Model.PagingInfo" page-action="Search" page-classes-enabled="true"
+    page-class="btn" page-class-normal="btn-default"
+    page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory" class="btn-group float-right">
+</div>

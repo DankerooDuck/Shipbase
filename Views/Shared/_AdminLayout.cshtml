@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<style>
+    .logo-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+</style>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.min.css" />
+    <title>@ViewBag.Title</title>
+    <style>
+        .input-validation-error {
+            border-color: red;
+            background-color: #fee;
+        }
+    </style>
+    <script asp-src-include="lib/jquery/**/jquery.min.js"></script>
+    <script asp-src-include="lib/jquery-validation/**/jquery.validate.min.js"></script>
+    <script asp-src-include="lib/jquery-validation-unobtrusive/**/*.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h2>@ViewBag.Title</h2>
+                    </div>
+                    <div class="col-auto ml-auto logo-container">
+                        <a class="navbar-brand text-white" href="/">
+                            <img src="/images/shipbase.png" alt="Shipbase" style="width: 150px; height: auto;" />
+                        </a>
+                    </div>
+                </div>
+                @if(User.Identity.IsAuthenticated) @*ADMIN LAYOUT IS USED FOR CREATE ACCOUNT AND LOGIN!!! THUS, THIS IS NEEDED*@
+                    {
+                        <div class="row row-cols-auto">
+                            @*
+                            <div class="col-auto">
+                                <a class="btn btn-sm btn-primary float-right" asp-action="Logout" asp-controller="Account">Log Out</a>
+                            </div>
+                            *@
+                            <div class="col-auto">
+                                <a class="btn btn-sm btn-primary float-right" asp-action="Index" asp-controller="Home">Home</a>
+                            </div>
+                            @if(User.IsInRole("Admin"))
+                            {
+                            <div class="col-auto">
+                                <a class="btn btn-sm btn-primary float-right" asp-action="Index" asp-controller="Admin">View Products</a>
+                            </div>
+                            <div class="col-auto">
+                                <a class="btn btn-sm btn-primary float-right" asp-action="Index" asp-controller="Order">View Orders</a>
+                            </div>
+                            }
+                        </div>
+                    }
+            </div>
+            <div class="card-body">
+                @if (TempData["message"] != null)
+                {
+                    <div class="alert alert-success">@TempData["message"]</div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</body>
+</html>
